@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Festival Calendar - Living Cultural Timeline | Heritage India</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <style>
+        .festival-card {
+            transition: all 0.3s ease;
+        }
+        .festival-card:hover {
+            transform: translateY(-5px);
+        }
+        .timeline-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .festival-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .lunar-date {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        .celebration-animation {
+            animation: gentle-bounce 2s ease-in-out infinite;
+        }
+        @keyframes gentle-bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fheritagei5090back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background text-text-primary">
+    <!-- Navigation Header -->
+    <nav class="bg-surface shadow-cultural sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <svg class="h-10 w-10 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                        <circle cx="50" cy="20" r="8"/>
+                        <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                        <rect x="45" y="60" width="10" height="25"/>
+                        <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                    </svg>
+                    <span class="ml-3 text-2xl font-headlines font-semibold text-primary">Heritage India</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="homepage_cultural_heritage_hub.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                        <a href="regional_explorer_interactive_cultural_map.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Regions</a>
+                        <a href="festival_calendar_living_cultural_timeline.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Festivals</a>
+                        <a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Arts & Crafts</a>
+                        <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                        <a href="interactive_learning_hub_cultural_education_center.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Learning Hub</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-text-secondary hover:text-primary p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-surface border-t border-accent-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="homepage_cultural_heritage_hub.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                <a href="regional_explorer_interactive_cultural_map.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Regions</a>
+                <a href="festival_calendar_living_cultural_timeline.html" class="block text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Festivals</a>
+                <a href="arts_crafts_gallery_living_heritage_showcase.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Arts & Crafts</a>
+                <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                <a href="interactive_learning_hub_cultural_education_center.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Learning Hub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary-100 via-accent-50 to-secondary-100 py-16">
+        <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=2070');"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="celebration-animation inline-block mb-6">
+                <svg class="w-16 h-16 text-primary mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-headlines font-bold text-primary mb-6">Festival Calendar</h1>
+            <p class="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto mb-8">Experience the sacred rhythms of Indian celebrations through our living cultural timeline</p>
+            
+            <!-- Current Festival Highlight -->
+            <div class="card-cultural max-w-2xl mx-auto p-8 mb-8">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="text-2xl font-headlines font-semibold text-text-primary">Ganesh Chaturthi</h3>
+                        <p class="text-text-secondary">September 8, 2025 • Bhadrapada Shukla Chaturthi</p>
+                    </div>
+                </div>
+                <p class="text-text-secondary text-center mb-4">Today we celebrate Lord Ganesha, the remover of obstacles and patron of arts and sciences. Communities across India welcome Ganesha into their homes and hearts.</p>
+                <div class="flex justify-center space-x-4">
+                    <button class="btn-primary">Learn Rituals</button>
+                    <button class="btn-secondary">View Celebrations</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Festival Filters & Search -->
+    <section class="py-8 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-6 items-center justify-between">
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-md">
+                    <div class="relative">
+                        <input type="text" placeholder="Search festivals, rituals, or traditions..." class="input-cultural w-full pl-10" />
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Filter Options -->
+                <div class="flex flex-wrap gap-4">
+                    <select class="input-cultural">
+                        <option>All Regions</option>
+                        <option>North India</option>
+                        <option>South India</option>
+                        <option>East India</option>
+                        <option>West India</option>
+                        <option>Central India</option>
+                    </select>
+                    
+                    <select class="input-cultural">
+                        <option>All Traditions</option>
+                        <option>Hindu Festivals</option>
+                        <option>Sikh Celebrations</option>
+                        <option>Buddhist Observances</option>
+                        <option>Jain Festivals</option>
+                        <option>Regional Folk</option>
+                    </select>
+                    
+                    <select class="input-cultural">
+                        <option>All Months</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                    </select>
+                    
+                    <button class="btn-accent flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
+                        </svg>
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar View Toggle -->
+    <section class="py-6 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center">
+                <div class="bg-surface rounded-lg p-1 flex">
+                    <button id="timeline-view" class="px-6 py-2 rounded-md bg-primary text-white font-medium transition-cultural">Timeline View</button>
+                    <button id="calendar-view" class="px-6 py-2 rounded-md text-text-secondary hover:text-primary transition-cultural">Calendar View</button>
+                    <button id="list-view" class="px-6 py-2 rounded-md text-text-secondary hover:text-primary transition-cultural">List View</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline View (Default) -->
+    <section id="timeline-section" class="py-12 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 bg-primary h-full"></div>
+                
+                <!-- Timeline Events -->
+                <div class="space-y-12">
+                    <!-- Ganesh Chaturthi - Today -->
+                    <div class="relative flex items-center">
+                        <div class="timeline-dot absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-primary rounded-full border-4 border-background z-10"></div>
+                        <div class="w-1/2 pr-8">
+                            <div class="festival-card card-cultural p-6 ml-auto max-w-md">
+                                <div class="flex items-center mb-4">
+                                    <img src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Ganesh Chaturthi" class="w-16 h-16 rounded-full object-cover mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                    <div>
+                                        <h3 class="text-lg font-headlines font-semibold text-text-primary">Ganesh Chaturthi</h3>
+                                        <p class="text-sm text-text-secondary">September 8, 2025</p>
+                                        <p class="text-xs text-primary lunar-date">Bhadrapada Shukla Chaturthi</p>
+                                    </div>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">The beloved elephant-headed deity arrives to bless devotees with wisdom and remove obstacles from their path.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs bg-primary text-white px-2 py-1 rounded">Celebrating Today</span>
+                                    <button class="text-primary hover:text-primary-600 text-sm font-medium">Learn More →</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-1/2 pl-8"></div>
+                    </div>
+                    
+                    <!-- Navratri -->
+                    <div class="relative flex items-center">
+                        <div class="timeline-dot absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-secondary rounded-full border-4 border-background z-10"></div>
+                        <div class="w-1/2 pr-8"></div>
+                        <div class="w-1/2 pl-8">
+                            <div class="festival-card card-cultural p-6 max-w-md">
+                                <div class="flex items-center mb-4">
+                                    <img src="https://images.pixabay.com/photo/2017/10/11/15/56/garba-2840985_1280.jpg" alt="Navratri" class="w-16 h-16 rounded-full object-cover mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                    <div>
+                                        <h3 class="text-lg font-headlines font-semibold text-text-primary">Navratri</h3>
+                                        <p class="text-sm text-text-secondary">September 20, 2025</p>
+                                        <p class="text-xs text-secondary lunar-date">Ashwin Shukla Pratipada</p>
+                                    </div>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">Nine nights of divine celebration honoring the feminine divine through dance, music, and devotion.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs bg-secondary text-white px-2 py-1 rounded">In 12 days</span>
+                                    <button class="text-secondary hover:text-secondary-600 text-sm font-medium">Learn More →</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diwali -->
+                    <div class="relative flex items-center">
+                        <div class="timeline-dot absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-accent rounded-full border-4 border-background z-10"></div>
+                        <div class="w-1/2 pr-8">
+                            <div class="festival-card card-cultural p-6 ml-auto max-w-md">
+                                <div class="flex items-center mb-4">
+                                    <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=2106&auto=format&fit=crop" alt="Diwali" class="w-16 h-16 rounded-full object-cover mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                    <div>
+                                        <h3 class="text-lg font-headlines font-semibold text-text-primary">Diwali</h3>
+                                        <p class="text-sm text-text-secondary">October 20, 2025</p>
+                                        <p class="text-xs text-accent lunar-date">Kartik Amavasya</p>
+                                    </div>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">The festival of lights illuminates hearts and homes, celebrating the victory of light over darkness.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs bg-accent text-white px-2 py-1 rounded">In 43 days</span>
+                                    <button class="text-accent hover:text-accent-600 text-sm font-medium">Learn More →</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-1/2 pl-8"></div>
+                    </div>
+                    
+                    <!-- Karva Chauth -->
+                    <div class="relative flex items-center">
+                        <div class="timeline-dot absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background z-10"></div>
+                        <div class="w-1/2 pr-8"></div>
+                        <div class="w-1/2 pl-8">
+                            <div class="festival-card card-cultural p-6 max-w-md">
+                                <div class="flex items-center mb-4">
+                                    <img src="https://images.pexels.com/photos/6249509/pexels-photo-6249509.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Karva Chauth" class="w-16 h-16 rounded-full object-cover mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                                    <div>
+                                        <h3 class="text-lg font-headlines font-semibold text-text-primary">Karva Chauth</h3>
+                                        <p class="text-sm text-text-secondary">October 9, 2025</p>
+                                        <p class="text-xs text-primary lunar-date">Kartik Krishna Chaturthi</p>
+                                    </div>
+                                </div>
+                                <p class="text-text-secondary text-sm mb-4">A sacred fast observed by married women for the longevity and well-being of their husbands.</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs bg-primary text-white px-2 py-1 rounded">In 32 days</span>
+                                    <button class="text-primary hover:text-primary-600 text-sm font-medium">Learn More →</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar View (Hidden by default) -->
+    <section id="calendar-section" class="py-12 bg-background hidden">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="card-cultural p-8">
+                <!-- Calendar Header -->
+                <div class="flex items-center justify-between mb-8">
+                    <button class="p-2 hover:bg-primary-50 rounded-lg transition-cultural">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <h2 class="text-2xl font-headlines font-semibold text-text-primary">September 2025</h2>
+                    <button class="p-2 hover:bg-primary-50 rounded-lg transition-cultural">
+                        <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div class="calendar-grid bg-surface rounded-lg overflow-hidden">
+                    <!-- Days of Week Header -->
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Sun</div>
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Mon</div>
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Tue</div>
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Wed</div>
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Thu</div>
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Fri</div>
+                    <div class="calendar-day bg-primary-100 font-medium text-text-primary text-center py-3">Sat</div>
+                    
+                    <!-- Calendar Days -->
+                    <div class="calendar-day bg-gray-50 text-gray-400 hover:bg-gray-100 transition-cultural cursor-pointer">1</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">2</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">3</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">4</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">5</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">6</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">7</div>
+                    
+                    <div class="calendar-day bg-primary-100 text-primary font-bold hover:bg-primary-200 transition-cultural cursor-pointer relative">
+                        8
+                        <div class="festival-indicator bg-primary"></div>
+                    </div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">9</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">10</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">11</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">12</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">13</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">14</div>
+                    
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">15</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">16</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">17</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">18</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">19</div>
+                    <div class="calendar-day bg-secondary-100 text-secondary font-bold hover:bg-secondary-200 transition-cultural cursor-pointer relative">
+                        20
+                        <div class="festival-indicator bg-secondary"></div>
+                    </div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">21</div>
+                    
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">22</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">23</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">24</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">25</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">26</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">27</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">28</div>
+                    
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">29</div>
+                    <div class="calendar-day bg-white hover:bg-primary-50 transition-cultural cursor-pointer">30</div>
+                    <div class="calendar-day bg-gray-50 text-gray-400 hover:bg-gray-100 transition-cultural cursor-pointer">1</div>
+                    <div class="calendar-day bg-gray-50 text-gray-400 hover:bg-gray-100 transition-cultural cursor-pointer">2</div>
+                    <div class="calendar-day bg-gray-50 text-gray-400 hover:bg-gray-100 transition-cultural cursor-pointer">3</div>
+                    <div class="calendar-day bg-gray-50 text-gray-400 hover:bg-gray-100 transition-cultural cursor-pointer">4</div>
+                    <div class="calendar-day bg-gray-50 text-gray-400 hover:bg-gray-100 transition-cultural cursor-pointer">5</div>
+                </div>
+                
+                <!-- Calendar Legend -->
+                <div class="mt-6 flex flex-wrap justify-center gap-4">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-primary rounded-full mr-2"></div>
+                        <span class="text-sm text-text-secondary">Major Festivals</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-secondary rounded-full mr-2"></div>
+                        <span class="text-sm text-text-secondary">Regional Celebrations</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-accent rounded-full mr-2"></div>
+                        <span class="text-sm text-text-secondary">Cultural Events</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- List View (Hidden by default) -->
+    <section id="list-section" class="py-12 bg-background hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="space-y-6">
+                <!-- Festival List Item -->
+                <div class="festival-card card-cultural p-6 flex items-center">
+                    <img src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Ganesh Chaturthi" class="w-20 h-20 rounded-lg object-cover mr-6" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-headlines font-semibold text-text-primary">Ganesh Chaturthi</h3>
+                            <span class="text-sm bg-primary text-white px-3 py-1 rounded-full">Today</span>
+                        </div>
+                        <p class="text-text-secondary mb-2">September 8, 2025 • Bhadrapada Shukla Chaturthi</p>
+                        <p class="text-text-secondary text-sm mb-4">The beloved elephant-headed deity arrives to bless devotees with wisdom and remove obstacles from their path.</p>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-xs bg-primary-100 text-primary px-2 py-1 rounded">Pan-India</span>
+                            <span class="text-xs bg-secondary-100 text-secondary px-2 py-1 rounded">11 Days</span>
+                            <button class="text-primary hover:text-primary-600 text-sm font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- More Festival Items -->
+                <div class="festival-card card-cultural p-6 flex items-center">
+                    <img src="https://images.pixabay.com/photo/2017/10/11/15/56/garba-2840985_1280.jpg" alt="Navratri" class="w-20 h-20 rounded-lg object-cover mr-6" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-headlines font-semibold text-text-primary">Navratri</h3>
+                            <span class="text-sm bg-secondary text-white px-3 py-1 rounded-full">12 days</span>
+                        </div>
+                        <p class="text-text-secondary mb-2">September 20, 2025 • Ashwin Shukla Pratipada</p>
+                        <p class="text-text-secondary text-sm mb-4">Nine nights of divine celebration honoring the feminine divine through dance, music, and devotion.</p>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-xs bg-primary-100 text-primary px-2 py-1 rounded">Gujarat, Maharashtra</span>
+                            <span class="text-xs bg-secondary-100 text-secondary px-2 py-1 rounded">9 Nights</span>
+                            <button class="text-secondary hover:text-secondary-600 text-sm font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="festival-card card-cultural p-6 flex items-center">
+                    <img src="https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=2106&auto=format&fit=crop" alt="Diwali" class="w-20 h-20 rounded-lg object-cover mr-6" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-headlines font-semibold text-text-primary">Diwali</h3>
+                            <span class="text-sm bg-accent text-white px-3 py-1 rounded-full">43 days</span>
+                        </div>
+                        <p class="text-text-secondary mb-2">October 20, 2025 • Kartik Amavasya</p>
+                        <p class="text-text-secondary text-sm mb-4">The festival of lights illuminates hearts and homes, celebrating the victory of light over darkness.</p>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-xs bg-primary-100 text-primary px-2 py-1 rounded">Pan-India</span>
+                            <span class="text-xs bg-secondary-100 text-secondary px-2 py-1 rounded">5 Days</span>
+                            <button class="text-accent hover:text-accent-600 text-sm font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Festival Deep Dive -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Festival Deep Dive</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Explore the rich traditions, rituals, and cultural significance of today's celebration</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Festival Video/Image -->
+                <div class="relative">
+                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                        <img src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=2070" alt="Ganesh Chaturthi celebration" class="w-full h-96 object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    </div>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
+                        <button class="bg-white bg-opacity-90 rounded-full p-4 hover:bg-opacity-100 transition-all">
+                            <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Festival Information -->
+                <div>
+                    <h3 class="text-3xl font-headlines font-bold text-text-primary mb-6">Ganesh Chaturthi: The Beloved Remover of Obstacles</h3>
+                    
+                    <!-- Ritual Steps -->
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-white font-bold text-sm">1</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headlines font-semibold text-text-primary mb-2">Ganesh Installation (Sthapana)</h4>
+                                <p class="text-text-secondary text-sm">Welcome Lord Ganesha into your home with proper rituals and offerings of modak, his favorite sweet.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-white font-bold text-sm">2</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headlines font-semibold text-text-primary mb-2">Daily Prayers (Aarti)</h4>
+                                <p class="text-text-secondary text-sm">Perform morning and evening prayers with traditional songs and offerings of flowers and sweets.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center mr-4 mt-1">
+                                <span class="text-white font-bold text-sm">3</span>
+                            </div>
+                            <div>
+                                <h4 class="font-headlines font-semibold text-text-primary mb-2">Immersion (Visarjan)</h4>
+                                <p class="text-text-secondary text-sm">Bid farewell to Ganesha with processions and immersion in water bodies, promising his return next year.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex space-x-4">
+                        <button class="btn-primary">Learn Recipes</button>
+                        <button class="btn-secondary">View Celebrations</button>
+                        <button class="btn-accent">Join Community</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Celebrations -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Community Celebrations</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">See how our global community celebrates Indian festivals</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Community Post 1 -->
+                <div class="card-cultural overflow-hidden">
+                    <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Community celebration" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://images.pixabay.com/photo/2016/11/29/13/14/attractive-1869761_1280.jpg" alt="Priya" class="w-10 h-10 rounded-full mr-3" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div>
+                                <h4 class="font-headlines font-semibold text-text-primary">Priya Sharma</h4>
+                                <p class="text-text-secondary text-sm">Mumbai, India</p>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-4">"Our building's Ganesh celebration brought everyone together! Made 108 modaks with my grandmother's recipe. The joy on children's faces during aarti was priceless. 🙏"</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-text-secondary">2 hours ago</span>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-primary hover:text-primary-600">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <span class="text-sm text-text-secondary">24</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Community Post 2 -->
+                <div class="card-cultural overflow-hidden">
+                    <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop" alt="Community celebration" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Raj" class="w-10 h-10 rounded-full mr-3" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div>
+                                <h4 class="font-headlines font-semibold text-text-primary">Raj Patel</h4>
+                                <p class="text-text-secondary text-sm">London, UK</p>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-4">"Teaching my kids about Ganesh Chaturthi in London. We made eco-friendly clay Ganesha and celebrated with our Indian community. Culture knows no borders! 🌍"</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-text-secondary">4 hours ago</span>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-primary hover:text-primary-600">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <span class="text-sm text-text-secondary">18</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Community Post 3 -->
+                <div class="card-cultural overflow-hidden">
+                    <div class="aspect-w-16 aspect-h-9 overflow-hidden">
+                        <img src="https://images.pixabay.com/photo/2017/09/07/08/54/money-2724241_1280.jpg" alt="Community celebration" class="w-full h-48 object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Anita" class="w-10 h-10 rounded-full mr-3" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div>
+                                <h4 class="font-headlines font-semibold text-text-primary">Anita Desai</h4>
+                                <p class="text-text-secondary text-sm">New York, USA</p>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-4">"First time celebrating Ganesh Chaturthi! My Indian neighbors invited us to join their family celebration. The warmth and traditions are beautiful. Thank you for welcoming us! 🕉️"</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-text-secondary">6 hours ago</span>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-primary hover:text-primary-600">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <span class="text-sm text-text-secondary">31</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-primary">Share Your Celebration</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Festival Notifications -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="card-cultural p-8">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-headlines font-bold text-text-primary mb-4">Never Miss a Celebration</h2>
+                <p class="text-xl text-text-secondary mb-8">Get personalized festival reminders, preparation guides, and virtual participation opportunities delivered to your inbox.</p>
+                
+                <div class="max-w-md mx-auto flex mb-6">
+                    <input type="email" placeholder="Enter your email address" class="input-cultural flex-1 mr-2" />
+                    <button class="btn-primary px-6">Subscribe</button>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-4 text-sm text-text-secondary">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Festival Reminders
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Preparation Guides
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        Cultural Stories
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-text-primary text-surface py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="md:col-span-1">
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                            <circle cx="50" cy="20" r="8"/>
+                            <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                            <rect x="45" y="60" width="10" height="25"/>
+                            <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-headlines font-semibold text-primary">Heritage India</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">Discover the soul of India through its living heritage, traditions, and cultural treasures.</p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.017 0C18.396 0 20.396 1.104 20.396 4.297v11.406C20.396 18.896 18.396 20 12.017 20H7.983C1.604 20-.396 18.896-.396 15.703V4.297C-.396 1.104 1.604 0 7.983 0h4.034zm-5.017 7v6h2v-6H7zm1-2a1 1 0 100-2 1 1 0 000 2zm3 2v6h2v-3.5c0-1.5 1-2.5 2.5-2.5s1.5 1 1.5 2.5V13h2v-4c0-2-1.5-3-3.5-3S11 7.5 11 7z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="regional_explorer_interactive_cultural_map.html" class="text-gray-300 hover:text-primary transition-colors">Regional Culture</a></li>
+                        <li><a href="festival_calendar_living_cultural_timeline.html" class="text-gray-300 hover:text-primary transition-colors">Festival Calendar</a></li>
+                        <li><a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-gray-300 hover:text-primary transition-colors">Arts & Crafts</a></li>
+                        <li><a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-gray-300 hover:text-primary transition-colors">Culinary Heritage</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Community -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Community</h3>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Share Your Story</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Cultural Forum</a></li>
+                        <li><a href="interactive_learning_hub_cultural_education_center.html" class="text-gray-300 hover:text-primary transition-colors">Learning Hub</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Events</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Stay Connected</h3>
+                    <p class="text-sm text-gray-300 mb-4">Get cultural insights and festival updates delivered to your inbox.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="input-cultural flex-1 mr-2 text-text-primary" />
+                        <button class="btn-primary px-4 py-2">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-sm text-gray-300">© 2025 Heritage India. All Rights Reserved. Celebrating India's cultural legacy with respect and authenticity.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // View toggle functionality
+        const timelineView = document.getElementById('timeline-view');
+        const calendarView = document.getElementById('calendar-view');
+        const listView = document.getElementById('list-view');
+        
+        const timelineSection = document.getElementById('timeline-section');
+        const calendarSection = document.getElementById('calendar-section');
+        const listSection = document.getElementById('list-section');
+
+        function showView(activeView, activeSection) {
+            // Reset all buttons
+            [timelineView, calendarView, listView].forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('text-text-secondary');
+            });
+            
+            // Hide all sections
+            [timelineSection, calendarSection, listSection].forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Activate selected view
+            activeView.classList.add('bg-primary', 'text-white');
+            activeView.classList.remove('text-text-secondary');
+            activeSection.classList.remove('hidden');
+        }
+
+        timelineView.addEventListener('click', () => showView(timelineView, timelineSection));
+        calendarView.addEventListener('click', () => showView(calendarView, calendarSection));
+        listView.addEventListener('click', () => showView(listView, listSection));
+
+        // Calendar day click functionality
+        document.querySelectorAll('.calendar-day').forEach(day => {
+            day.addEventListener('click', function() {
+                if (this.querySelector('.festival-indicator')) {
+                    alert('Festival details would be shown here for this date!');
+                }
+            });
+        });
+
+        // Initialize timeline view as default
+        showView(timelineView, timelineSection);
+    </script>
+</body>
+</html>

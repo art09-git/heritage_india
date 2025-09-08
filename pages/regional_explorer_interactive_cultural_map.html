@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regional Explorer - Interactive Cultural Map | Heritage India</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <style>
+        .map-region {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: drop-shadow(2px 2px 4px rgba(139, 69, 19, 0.2));
+        }
+        .map-region:hover {
+            transform: scale(1.02);
+            filter: drop-shadow(4px 4px 8px rgba(139, 69, 19, 0.3));
+        }
+        .region-preview {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+        .region-preview.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        .cultural-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+        }
+        .heritage-glow {
+            animation: heritage-pulse 3s ease-in-out infinite;
+        }
+        @keyframes heritage-pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        .filter-active {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-600));
+            color: white;
+        }
+        .swipe-indicator {
+            animation: swipe-hint 2s ease-in-out infinite;
+        }
+        @keyframes swipe-hint {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fheritagei5090back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background text-text-primary">
+    <!-- Navigation Header -->
+    <nav class="bg-surface shadow-cultural sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <svg class="h-10 w-10 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                        <circle cx="50" cy="20" r="8"/>
+                        <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                        <rect x="45" y="60" width="10" height="25"/>
+                        <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                    </svg>
+                    <span class="ml-3 text-2xl font-headlines font-semibold text-primary">Heritage India</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="homepage_cultural_heritage_hub.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                        <a href="regional_explorer_interactive_cultural_map.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Regions</a>
+                        <a href="festival_calendar_living_cultural_timeline.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Festivals</a>
+                        <a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Arts & Crafts</a>
+                        <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                        <a href="interactive_learning_hub_cultural_education_center.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Learning Hub</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-text-secondary hover:text-primary p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-surface border-t border-accent-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="homepage_cultural_heritage_hub.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                <a href="regional_explorer_interactive_cultural_map.html" class="block text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Regions</a>
+                <a href="festival_calendar_living_cultural_timeline.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Festivals</a>
+                <a href="arts_crafts_gallery_living_heritage_showcase.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Arts & Crafts</a>
+                <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                <a href="interactive_learning_hub_cultural_education_center.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Learning Hub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative py-16 bg-gradient-to-br from-primary-50 to-accent-50 cultural-pattern">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl md:text-6xl font-headlines font-bold text-primary mb-6">Explore India's Cultural Regions</h1>
+            <p class="text-xl md:text-2xl text-text-secondary max-w-4xl mx-auto mb-8">Discover the unique heritage, traditions, and stories that define each corner of our incredible nation</p>
+            
+            <!-- Cultural Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button class="filter-btn filter-active px-6 py-3 rounded-full font-medium transition-cultural" data-filter="all">All Regions</button>
+                <button class="filter-btn px-6 py-3 rounded-full font-medium transition-cultural bg-surface hover:bg-primary hover:text-white" data-filter="festivals">Festivals</button>
+                <button class="filter-btn px-6 py-3 rounded-full font-medium transition-cultural bg-surface hover:bg-primary hover:text-white" data-filter="arts">Arts & Crafts</button>
+                <button class="filter-btn px-6 py-3 rounded-full font-medium transition-cultural bg-surface hover:bg-primary hover:text-white" data-filter="heritage">Heritage Sites</button>
+                <button class="filter-btn px-6 py-3 rounded-full font-medium transition-cultural bg-surface hover:bg-primary hover:text-white" data-filter="cuisine">Cuisine</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section class="py-8 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Interactive Map -->
+                <div class="lg:col-span-2">
+                    <div class="card-cultural p-6">
+                        <div class="relative">
+                            <!-- India Map SVG -->
+                            <svg viewBox="0 0 1000 800" class="w-full h-auto max-h-96 lg:max-h-none">
+                                <!-- Background -->
+                                <rect width="1000" height="800" fill="#FDF5E6"/>
+                                
+                                <!-- Rajasthan -->
+                                <path class="map-region" fill="#B8860B" stroke="#8B4513" stroke-width="2" d="M150 200 L280 180 L320 240 L300 320 L220 340 L140 290 Z" data-region="rajasthan" data-festivals="Pushkar Fair, Desert Festival" data-arts="Block Printing, Miniature Painting" data-heritage="Jaipur City Palace, Mehrangarh Fort" data-cuisine="Dal Baati Churma, Laal Maas"/>
+                                <text x="230" y="260" class="text-sm font-body fill-white text-anchor-middle">Rajasthan</text>
+                                
+                                <!-- Kerala -->
+                                <path class="map-region" fill="#228B22" stroke="#8B4513" stroke-width="2" d="M200 580 L260 560 L280 640 L240 680 L200 660 Z" data-region="kerala" data-festivals="Onam, Theyyam" data-arts="Kathakali, Kalaripayattu" data-heritage="Backwaters, Munnar Hills" data-cuisine="Appam, Fish Curry"/>
+                                <text x="240" y="620" class="text-sm font-body fill-white text-anchor-middle">Kerala</text>
+                                
+                                <!-- Tamil Nadu -->
+                                <path class="map-region" fill="#CD853F" stroke="#8B4513" stroke-width="2" d="M280 640 L380 620 L420 700 L360 720 L320 700 Z" data-region="tamil-nadu" data-festivals="Pongal, Karthigai Deepam" data-arts="Bharatanatyam, Tanjore Painting" data-heritage="Meenakshi Temple, Mahabalipuram" data-cuisine="Sambar, Chettinad Chicken"/>
+                                <text x="350" y="670" class="text-sm font-body fill-white text-anchor-middle">Tamil Nadu</text>
+                                
+                                <!-- Maharashtra -->
+                                <path class="map-region" fill="#DAA520" stroke="#8B4513" stroke-width="2" d="M220 340 L320 320 L380 380 L340 440 L260 460 L200 400 Z" data-region="maharashtra" data-festivals="Ganesh Chaturthi, Gudi Padwa" data-arts="Warli Painting, Lavani Dance" data-heritage="Ajanta Caves, Gateway of India" data-cuisine="Vada Pav, Puran Poli"/>
+                                <text x="290" y="390" class="text-sm font-body fill-white text-anchor-middle">Maharashtra</text>
+                                
+                                <!-- West Bengal -->
+                                <path class="map-region" fill="#A0522D" stroke="#8B4513" stroke-width="2" d="M620 340 L720 330 L740 400 L700 440 L640 430 Z" data-region="west-bengal" data-festivals="Durga Puja, Kali Puja" data-arts="Rabindra Sangeet, Patachitra" data-heritage="Victoria Memorial, Sundarbans" data-cuisine="Fish Curry, Rasgulla"/>
+                                <text x="680" y="385" class="text-sm font-body fill-white text-anchor-middle">West Bengal</text>
+                                
+                                <!-- Punjab -->
+                                <path class="map-region" fill="#8B4513" stroke="#8B4513" stroke-width="2" d="M280 120 L380 110 L400 170 L360 200 L300 190 L260 150 Z" data-region="punjab" data-festivals="Baisakhi, Lohri" data-arts="Bhangra, Phulkari Embroidery" data-heritage="Golden Temple, Jallianwala Bagh" data-cuisine="Makki di Roti, Sarson da Saag"/>
+                                <text x="330" y="155" class="text-sm font-body fill-white text-anchor-middle">Punjab</text>
+                                
+                                <!-- Uttar Pradesh -->
+                                <path class="map-region" fill="#B8860B" stroke="#8B4513" stroke-width="2" d="M380 200 L520 190 L560 260 L520 300 L420 310 L380 250 Z" data-region="uttar-pradesh" data-festivals="Kumbh Mela, Ram Navami" data-arts="Chikankari, Kathak Dance" data-heritage="Taj Mahal, Varanasi Ghats" data-cuisine="Kebabs, Petha"/>
+                                <text x="470" y="250" class="text-sm font-body fill-white text-anchor-middle">Uttar Pradesh</text>
+                                
+                                <!-- Gujarat -->
+                                <path class="map-region" fill="#CD853F" stroke="#8B4513" stroke-width="2" d="M140 290 L220 280 L240 340 L200 380 L120 370 L100 320 Z" data-region="gujarat" data-festivals="Navratri, Rann Utsav" data-arts="Garba Dance, Bandhani Textiles" data-heritage="Somnath Temple, Gir Forest" data-cuisine="Dhokla, Thepla"/>
+                                <text x="170" y="335" class="text-sm font-body fill-white text-anchor-middle">Gujarat</text>
+                            </svg>
+                        </div>
+                        
+                        <!-- Mobile Swipe Indicator -->
+                        <div class="md:hidden flex items-center justify-center mt-4 text-text-secondary">
+                            <svg class="w-5 h-5 mr-2 swipe-indicator" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Tap regions to explore</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Region Preview Panel -->
+                <div class="lg:col-span-1">
+                    <div class="card-cultural p-6 sticky top-24">
+                        <div id="region-preview" class="region-preview">
+                            <div class="text-center py-8">
+                                <svg class="w-16 h-16 text-primary mx-auto mb-4 heritage-glow" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                                <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Discover Regional Heritage</h3>
+                                <p class="text-text-secondary">Hover over or tap any region on the map to explore its unique cultural treasures</p>
+                            </div>
+                        </div>
+                        
+                        <div id="region-details" class="region-preview">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regional Highlights Grid -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Featured Regional Experiences</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Immerse yourself in the distinctive cultural landscapes that make each region unique</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Rajasthan Feature -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop" alt="Rajasthani folk dancers" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Desert Kingdom
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Rajasthan: Land of Kings</h3>
+                        <p class="text-text-secondary text-sm mb-4">Experience the royal heritage through majestic palaces, vibrant folk dances, and desert festivals that celebrate centuries of Rajput culture.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>8 UNESCO Sites</span>
+                            </div>
+                            <button class="text-primary hover:text-primary-600 font-medium text-sm">Explore Region →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kerala Feature -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.pexels.com/photos/962464/pexels-photo-962464.jpeg?auto=compress&cs=tinysrgb&w=2070" alt="Kerala backwaters" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-success text-white px-3 py-1 rounded-full text-sm font-medium">
+                            God's Own Country
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Kerala: Tropical Paradise</h3>
+                        <p class="text-text-secondary text-sm mb-4">Discover the serene backwaters, classical Kathakali performances, and Ayurvedic traditions in this lush coastal state.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                </svg>
+                                <span>44 Rivers</span>
+                            </div>
+                            <button class="text-primary hover:text-primary-600 font-medium text-sm">Explore Region →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tamil Nadu Feature -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.pixabay.com/photo/2017/08/06/12/52/classical-dance-2592655_1280.jpg" alt="Bharatanatyam dancer" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Temple Land
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Tamil Nadu: Classical Heritage</h3>
+                        <p class="text-text-secondary text-sm mb-4">Witness the grace of Bharatanatyam, marvel at Dravidian architecture, and experience the oldest living language traditions.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>38,000 Temples</span>
+                            </div>
+                            <button class="text-primary hover:text-primary-600 font-medium text-sm">Explore Region →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- West Bengal Feature -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Durga Puja celebration" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-secondary text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Cultural Capital
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">West Bengal: Intellectual Hub</h3>
+                        <p class="text-text-secondary text-sm mb-4">Explore the birthplace of the Bengali Renaissance, home to Nobel laureates, and the magnificent Durga Puja celebrations.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Film Capital</span>
+                            </div>
+                            <button class="text-primary hover:text-primary-600 font-medium text-sm">Explore Region →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Punjab Feature -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop" alt="Bhangra dancers" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-warning text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Land of Five Rivers
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Punjab: Vibrant Heartland</h3>
+                        <p class="text-text-secondary text-sm mb-4">Experience the energetic Bhangra, visit the Golden Temple, and taste the rich agricultural heritage of India's breadbasket.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                </svg>
+                                <span>Sikh Heritage</span>
+                            </div>
+                            <button class="text-primary hover:text-primary-600 font-medium text-sm">Explore Region →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gujarat Feature -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.pexels.com/photos/6249509/pexels-photo-6249509.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Gujarat handicrafts" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-error text-white px-3 py-1 rounded-full text-sm font-medium">
+                            Craft Heritage
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Gujarat: Entrepreneurial Spirit</h3>
+                        <p class="text-text-secondary text-sm mb-4">Discover the colorful Navratri celebrations, intricate handicrafts, and the birthplace of Mahatma Gandhi's philosophy.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Textile Hub</span>
+                            </div>
+                            <button class="text-primary hover:text-primary-600 font-medium text-sm">Explore Region →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cultural Connections -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Cultural Connections</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Discover how traditions flow across regional boundaries, creating India's unified cultural tapestry</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Classical Dance Connection -->
+                <div class="card-cultural p-6 text-center">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-headlines font-semibold text-text-primary mb-3">Classical Dance Forms</h3>
+                    <p class="text-text-secondary text-sm mb-4">From Tamil Nadu's Bharatanatyam to Kerala's Kathakali, explore how classical dance traditions share common roots while expressing regional uniqueness.</p>
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-3 py-1 bg-primary-100 text-primary text-xs rounded-full">Bharatanatyam</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary text-xs rounded-full">Kathakali</span>
+                        <span class="px-3 py-1 bg-primary-100 text-primary text-xs rounded-full">Kathak</span>
+                    </div>
+                </div>
+                
+                <!-- Festival Traditions -->
+                <div class="card-cultural p-6 text-center">
+                    <div class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l3.707 3.707A1 1 0 0018 18V8a1 1 0 00-.293-.707z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-headlines font-semibold text-text-primary mb-3">Harvest Celebrations</h3>
+                    <p class="text-text-secondary text-sm mb-4">Witness how Pongal, Baisakhi, and Onam celebrate the same agricultural cycle with distinct regional flavors and traditions.</p>
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-3 py-1 bg-secondary-100 text-secondary text-xs rounded-full">Pongal</span>
+                        <span class="px-3 py-1 bg-secondary-100 text-secondary text-xs rounded-full">Baisakhi</span>
+                        <span class="px-3 py-1 bg-secondary-100 text-secondary text-xs rounded-full">Onam</span>
+                    </div>
+                </div>
+                
+                <!-- Textile Traditions -->
+                <div class="card-cultural p-6 text-center">
+                    <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/>
+                            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-headlines font-semibold text-text-primary mb-3">Textile Heritage</h3>
+                    <p class="text-text-secondary text-sm mb-4">Discover how weaving traditions connect Gujarat's Bandhani, Rajasthan's block prints, and Bengal's handloom heritage.</p>
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="px-3 py-1 bg-accent-100 text-accent text-xs rounded-full">Bandhani</span>
+                        <span class="px-3 py-1 bg-accent-100 text-accent text-xs rounded-full">Block Print</span>
+                        <span class="px-3 py-1 bg-accent-100 text-accent text-xs rounded-full">Handloom</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-text-primary text-surface py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="md:col-span-1">
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                            <circle cx="50" cy="20" r="8"/>
+                            <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                            <rect x="45" y="60" width="10" height="25"/>
+                            <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-headlines font-semibold text-primary">Heritage India</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">Discover the soul of India through its living heritage, traditions, and cultural treasures.</p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.017 0C18.396 0 20.396 1.104 20.396 4.297v11.406C20.396 18.896 18.396 20 12.017 20H7.983C1.604 20-.396 18.896-.396 15.703V4.297C-.396 1.104 1.604 0 7.983 0h4.034zm-5.017 7v6h2v-6H7zm1-2a1 1 0 100-2 1 1 0 000 2zm3 2v6h2v-3.5c0-1.5 1-2.5 2.5-2.5s1.5 1 1.5 2.5V13h2v-4c0-2-1.5-3-3.5-3S11 7.5 11 7z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="regional_explorer_interactive_cultural_map.html" class="text-gray-300 hover:text-primary transition-colors">Regional Culture</a></li>
+                        <li><a href="festival_calendar_living_cultural_timeline.html" class="text-gray-300 hover:text-primary transition-colors">Festival Calendar</a></li>
+                        <li><a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-gray-300 hover:text-primary transition-colors">Arts & Crafts</a></li>
+                        <li><a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-gray-300 hover:text-primary transition-colors">Culinary Heritage</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Community -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Community</h3>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Share Your Story</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Cultural Forum</a></li>
+                        <li><a href="interactive_learning_hub_cultural_education_center.html" class="text-gray-300 hover:text-primary transition-colors">Learning Hub</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Events</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Stay Connected</h3>
+                    <p class="text-sm text-gray-300 mb-4">Get cultural insights and festival updates delivered to your inbox.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="input-cultural flex-1 mr-2 text-text-primary" />
+                        <button class="btn-primary px-4 py-2">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-sm text-gray-300">© 2025 Heritage India. All Rights Reserved. Celebrating India's cultural legacy with respect and authenticity.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('filter-active');
+                    b.classList.add('bg-surface', 'hover:bg-primary', 'hover:text-white');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('filter-active');
+                this.classList.remove('bg-surface', 'hover:bg-primary', 'hover:text-white');
+                
+                const filter = this.dataset.filter;
+                filterRegions(filter);
+            });
+        });
+
+        function filterRegions(filter) {
+            const regions = document.querySelectorAll('.map-region');
+            
+            regions.forEach(region => {
+                if (filter === 'all') {
+                    region.style.opacity = '1';
+                    region.style.pointerEvents = 'all';
+                } else {
+                    const regionData = region.dataset[filter];
+                    if (regionData) {
+                        region.style.opacity = '1';
+                        region.style.pointerEvents = 'all';
+                    } else {
+                        region.style.opacity = '0.3';
+                        region.style.pointerEvents = 'none';
+                    }
+                }
+            });
+        }
+
+        // Interactive map functionality
+        document.querySelectorAll('.map-region').forEach(region => {
+            region.addEventListener('mouseenter', function() {
+                showRegionPreview(this);
+            });
+            
+            region.addEventListener('mouseleave', function() {
+                hideRegionPreview();
+            });
+            
+            region.addEventListener('click', function() {
+                const regionName = this.dataset.region;
+                alert(`Exploring ${regionName}! This would navigate to the detailed ${regionName} cultural microsite.`);
+            });
+        });
+
+        function showRegionPreview(region) {
+            const regionName = region.dataset.region;
+            const festivals = region.dataset.festivals;
+            const arts = region.dataset.arts;
+            const heritage = region.dataset.heritage;
+            const cuisine = region.dataset.cuisine;
+            
+            const previewPanel = document.getElementById('region-details');
+            const defaultPreview = document.getElementById('region-preview');
+            
+            defaultPreview.classList.remove('active');
+            
+            previewPanel.innerHTML = `
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl font-headlines font-bold text-primary mb-2 capitalize">${regionName.replace('-', ' ')}</h3>
+                    <p class="text-text-secondary">Discover the cultural treasures of this magnificent region</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="border-l-4 border-primary pl-4">
+                        <h4 class="font-headlines font-semibold text-text-primary mb-1">Festivals</h4>
+                        <p class="text-sm text-text-secondary">${festivals}</p>
+                    </div>
+                    
+                    <div class="border-l-4 border-secondary pl-4">
+                        <h4 class="font-headlines font-semibold text-text-primary mb-1">Arts & Crafts</h4>
+                        <p class="text-sm text-text-secondary">${arts}</p>
+                    </div>
+                    
+                    <div class="border-l-4 border-accent pl-4">
+                        <h4 class="font-headlines font-semibold text-text-primary mb-1">Heritage Sites</h4>
+                        <p class="text-sm text-text-secondary">${heritage}</p>
+                    </div>
+                    
+                    <div class="border-l-4 border-success pl-4">
+                        <h4 class="font-headlines font-semibold text-text-primary mb-1">Cuisine</h4>
+                        <p class="text-sm text-text-secondary">${cuisine}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <button class="btn-primary w-full">Explore ${regionName.replace('-', ' ')} →</button>
+                </div>
+            `;
+            
+            previewPanel.classList.add('active');
+        }
+
+        function hideRegionPreview() {
+            const previewPanel = document.getElementById('region-details');
+            const defaultPreview = document.getElementById('region-preview');
+            
+            previewPanel.classList.remove('active');
+            setTimeout(() => {
+                defaultPreview.classList.add('active');
+            }, 200);
+        }
+
+        // Initialize default preview
+        document.getElementById('region-preview').classList.add('active');
+    </script>
+</body>
+</html>

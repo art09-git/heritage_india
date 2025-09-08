@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Learning Hub - Heritage India</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <style>
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+        .badge-glow {
+            animation: badge-pulse 2s infinite;
+        }
+        @keyframes badge-pulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(184, 134, 11, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(184, 134, 11, 0.6); }
+        }
+        .learning-card {
+            transition: all 0.3s ease;
+        }
+        .learning-card:hover {
+            transform: translateY(-5px);
+        }
+        .quiz-option {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .quiz-option:hover {
+            background-color: var(--color-primary-50);
+        }
+        .quiz-option.selected {
+            background-color: var(--color-primary-100);
+            border-color: var(--color-primary);
+        }
+        .quiz-option.correct {
+            background-color: var(--color-success-100);
+            border-color: var(--color-success);
+        }
+        .quiz-option.incorrect {
+            background-color: var(--color-error-100);
+            border-color: var(--color-error);
+        }
+        .level-indicator {
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        }
+        .achievement-unlock {
+            animation: unlock-bounce 0.6s ease-out;
+        }
+        @keyframes unlock-bounce {
+            0% { transform: scale(0.3) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(-10deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fheritagei5090back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background text-text-primary">
+    <!-- Navigation Header -->
+    <nav class="bg-surface shadow-cultural sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <svg class="h-10 w-10 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                        <circle cx="50" cy="20" r="8"/>
+                        <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                        <rect x="45" y="60" width="10" height="25"/>
+                        <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                    </svg>
+                    <span class="ml-3 text-2xl font-headlines font-semibold text-primary">Heritage India</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="homepage_cultural_heritage_hub.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                        <a href="regional_explorer_interactive_cultural_map.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Regions</a>
+                        <a href="festival_calendar_living_cultural_timeline.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Festivals</a>
+                        <a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Arts & Crafts</a>
+                        <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                        <a href="interactive_learning_hub_cultural_education_center.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Learning Hub</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-text-secondary hover:text-primary p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-surface border-t border-accent-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="homepage_cultural_heritage_hub.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                <a href="regional_explorer_interactive_cultural_map.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Regions</a>
+                <a href="festival_calendar_living_cultural_timeline.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Festivals</a>
+                <a href="arts_crafts_gallery_living_heritage_showcase.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Arts & Crafts</a>
+                <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                <a href="interactive_learning_hub_cultural_education_center.html" class="block text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Learning Hub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative py-16 bg-gradient-to-br from-primary-50 to-accent-50 overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg viewBox="0 0 400 400" class="w-full h-full">
+                <defs>
+                    <pattern id="cultural-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <circle cx="20" cy="20" r="2" fill="currentColor"/>
+                        <path d="M10 20 L30 20 M20 10 L20 30" stroke="currentColor" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#cultural-pattern)"/>
+            </svg>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center bg-primary-100 rounded-full px-4 py-2 mb-6">
+                    <svg class="w-5 h-5 text-primary mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                        <path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/>
+                        <path d="M6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                    </svg>
+                    <span class="text-primary font-medium text-sm">Interactive Cultural Education</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl font-headlines font-bold text-text-primary mb-6">
+                    Discover India's Heritage
+                    <span class="block text-primary">Through Learning</span>
+                </h1>
+                
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto mb-8">
+                    Embark on an interactive journey through India's rich cultural tapestry. Learn through games, quizzes, and immersive experiences designed for all ages and learning styles.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button id="start-learning-btn" class="btn-primary text-lg px-8 py-4">Start Your Cultural Journey</button>
+                    <button class="btn-secondary text-lg px-8 py-4">Explore Learning Paths</button>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">500+</div>
+                    <div class="text-sm text-text-secondary">Interactive Lessons</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">50+</div>
+                    <div class="text-sm text-text-secondary">Cultural Topics</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">25</div>
+                    <div class="text-sm text-text-secondary">Achievement Badges</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-2">10K+</div>
+                    <div class="text-sm text-text-secondary">Active Learners</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Dashboard -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Progress Overview -->
+                <div class="lg:col-span-2">
+                    <div class="card-cultural p-8">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-headlines font-semibold text-text-primary">Your Learning Journey</h2>
+                            <div class="flex items-center text-sm text-text-secondary">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Level 3 Cultural Explorer
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bars -->
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-text-primary">Indian History</span>
+                                    <span class="text-sm text-text-secondary">75%</span>
+                                </div>
+                                <div class="w-full bg-accent-100 rounded-full h-3">
+                                    <div class="level-indicator h-3 rounded-full" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-text-primary">Cultural Practices</span>
+                                    <span class="text-sm text-text-secondary">60%</span>
+                                </div>
+                                <div class="w-full bg-accent-100 rounded-full h-3">
+                                    <div class="level-indicator h-3 rounded-full" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-text-primary">Arts & Crafts</span>
+                                    <span class="text-sm text-text-secondary">45%</span>
+                                </div>
+                                <div class="w-full bg-accent-100 rounded-full h-3">
+                                    <div class="level-indicator h-3 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-text-primary">Regional Diversity</span>
+                                    <span class="text-sm text-text-secondary">80%</span>
+                                </div>
+                                <div class="w-full bg-accent-100 rounded-full h-3">
+                                    <div class="level-indicator h-3 rounded-full" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Activity -->
+                        <div class="mt-8">
+                            <h3 class="text-lg font-headlines font-semibold text-text-primary mb-4">Recent Activity</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center p-3 bg-success-50 rounded-lg">
+                                    <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-text-primary">Completed "Mughal Architecture" quiz</div>
+                                        <div class="text-xs text-text-secondary">2 hours ago • 95% score</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 bg-primary-50 rounded-lg">
+                                    <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-text-primary">Earned "Festival Expert" badge</div>
+                                        <div class="text-xs text-text-secondary">Yesterday • Diwali traditions mastery</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Achievement Sidebar -->
+                <div class="space-y-6">
+                    <!-- Overall Progress -->
+                    <div class="card-cultural p-6 text-center">
+                        <div class="relative w-24 h-24 mx-auto mb-4">
+                            <svg class="progress-ring w-24 h-24">
+                                <circle class="progress-ring-circle" stroke="var(--color-primary)" stroke-width="4" fill="transparent" r="40" cx="48" cy="48" style="stroke-dashoffset: 75.36;"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-xl font-bold text-primary">70%</span>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-headlines font-semibold text-text-primary mb-2">Overall Progress</h3>
+                        <p class="text-sm text-text-secondary">Cultural Explorer Level 3</p>
+                    </div>
+                    
+                    <!-- Recent Badges -->
+                    <div class="card-cultural p-6">
+                        <h3 class="text-lg font-headlines font-semibold text-text-primary mb-4">Recent Achievements</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-2 badge-glow">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                </div>
+                                <div class="text-xs text-text-secondary">Festival Expert</div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/>
+                                        <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="text-xs text-text-secondary">Art Scholar</div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="text-xs text-text-secondary">Regional Guide</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Learning Streak -->
+                    <div class="card-cultural p-6">
+                        <h3 class="text-lg font-headlines font-semibold text-text-primary mb-4">Learning Streak</h3>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2">7</div>
+                            <div class="text-sm text-text-secondary mb-4">Days in a row</div>
+                            <div class="flex justify-center space-x-1">
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                                <div class="w-6 h-6 bg-primary rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Quiz Section -->
+    <section class="py-16 bg-background">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Test Your Knowledge</h2>
+                <p class="text-xl text-text-secondary">Challenge yourself with our interactive cultural quiz</p>
+            </div>
+            
+            <div class="card-cultural p-8">
+                <div id="quiz-container">
+                    <!-- Quiz Header -->
+                    <div class="flex justify-between items-center mb-8">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
+                                <span class="text-white font-bold" id="question-number">1</span>
+                            </div>
+                            <div>
+                                <div class="text-sm text-text-secondary">Question 1 of 5</div>
+                                <div class="text-lg font-headlines font-semibold text-text-primary">Indian Festivals</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-text-secondary">Score</div>
+                            <div class="text-2xl font-bold text-primary" id="quiz-score">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-accent-100 rounded-full h-2 mb-8">
+                        <div class="level-indicator h-2 rounded-full transition-all duration-500" id="quiz-progress" style="width: 20%"></div>
+                    </div>
+                    
+                    <!-- Question -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-6" id="quiz-question">
+                            Which festival is known as the "Festival of Lights" and celebrates the victory of light over darkness?
+                        </h3>
+                        
+                        <!-- Options -->
+                        <div class="space-y-3" id="quiz-options">
+                            <div class="quiz-option border-2 border-accent-200 rounded-lg p-4 hover:bg-primary-50" data-answer="diwali">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 border-2 border-accent rounded-full mr-3 flex items-center justify-center">
+                                        <div class="w-3 h-3 bg-primary rounded-full opacity-0 transition-opacity"></div>
+                                    </div>
+                                    <span class="text-text-primary">Diwali</span>
+                                </div>
+                            </div>
+                            
+                            <div class="quiz-option border-2 border-accent-200 rounded-lg p-4 hover:bg-primary-50" data-answer="holi">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 border-2 border-accent rounded-full mr-3 flex items-center justify-center">
+                                        <div class="w-3 h-3 bg-primary rounded-full opacity-0 transition-opacity"></div>
+                                    </div>
+                                    <span class="text-text-primary">Holi</span>
+                                </div>
+                            </div>
+                            
+                            <div class="quiz-option border-2 border-accent-200 rounded-lg p-4 hover:bg-primary-50" data-answer="navratri">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 border-2 border-accent rounded-full mr-3 flex items-center justify-center">
+                                        <div class="w-3 h-3 bg-primary rounded-full opacity-0 transition-opacity"></div>
+                                    </div>
+                                    <span class="text-text-primary">Navratri</span>
+                                </div>
+                            </div>
+                            
+                            <div class="quiz-option border-2 border-accent-200 rounded-lg p-4 hover:bg-primary-50" data-answer="eid">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 border-2 border-accent rounded-full mr-3 flex items-center justify-center">
+                                        <div class="w-3 h-3 bg-primary rounded-full opacity-0 transition-opacity"></div>
+                                    </div>
+                                    <span class="text-text-primary">Eid</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quiz Actions -->
+                    <div class="flex justify-between items-center">
+                        <button id="quiz-hint" class="text-primary hover:text-primary-600 font-medium flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                            </svg>
+                            Need a hint?
+                        </button>
+                        
+                        <div class="space-x-3">
+                            <button id="quiz-submit" class="btn-primary" disabled>Submit Answer</button>
+                            <button id="quiz-next" class="btn-secondary hidden">Next Question</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Explanation Panel -->
+                    <div id="quiz-explanation" class="mt-6 p-4 bg-primary-50 rounded-lg hidden">
+                        <h4 class="font-headlines font-semibold text-text-primary mb-2">Cultural Context</h4>
+                        <p class="text-text-secondary text-sm">Diwali, also known as Deepavali, is one of the most significant festivals in Hinduism. It symbolizes the spiritual victory of light over darkness, good over evil, and knowledge over ignorance. The festival is celebrated by lighting oil lamps, decorating homes, and sharing sweets with family and friends.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Paths -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Choose Your Learning Path</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Structured learning journeys designed for different interests and skill levels</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Beginner Path -->
+                <div class="learning-card card-cultural p-6">
+                    <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary text-center mb-3">Cultural Foundations</h3>
+                    <p class="text-text-secondary text-center mb-6">Perfect for beginners exploring Indian culture for the first time</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">15 Interactive Lessons</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Basic Cultural Concepts</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">5 Achievement Badges</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-sm text-text-secondary mb-2">Estimated Time: 2-3 weeks</div>
+                        <button class="btn-primary w-full">Start Learning</button>
+                    </div>
+                </div>
+                
+                <!-- Intermediate Path -->
+                <div class="learning-card card-cultural p-6">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                            <path d="M3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0z"/>
+                            <path d="M6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary text-center mb-3">Cultural Explorer</h3>
+                    <p class="text-text-secondary text-center mb-6">Deep dive into regional diversity and historical contexts</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">25 Advanced Lessons</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Regional Specializations</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">10 Achievement Badges</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-sm text-text-secondary mb-2">Estimated Time: 4-6 weeks</div>
+                        <button class="btn-primary w-full">Continue Journey</button>
+                    </div>
+                </div>
+                
+                <!-- Advanced Path -->
+                <div class="learning-card card-cultural p-6">
+                    <div class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary text-center mb-3">Cultural Scholar</h3>
+                    <p class="text-text-secondary text-center mb-6">Master-level understanding of Indian cultural heritage</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">40 Expert Lessons</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Research Projects</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <svg class="w-4 h-4 text-success mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">15 Master Badges</span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-sm text-text-secondary mb-2">Estimated Time: 8-12 weeks</div>
+                        <button class="btn-secondary w-full">Unlock Path</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Games Section -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Cultural Games & Challenges</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Learn through play with our engaging cultural games and interactive challenges</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Timeline Puzzle -->
+                <div class="card-cultural p-6 text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-3">Timeline Puzzle</h3>
+                    <p class="text-text-secondary mb-6">Arrange historical events in chronological order and discover the flow of Indian history</p>
+                    <div class="flex items-center justify-center text-sm text-text-secondary mb-4">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>15-20 minutes</span>
+                    </div>
+                    <button class="btn-primary w-full">Play Now</button>
+                </div>
+                
+                <!-- Regional Matching -->
+                <div class="card-cultural p-6 text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-secondary to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-3">Regional Matching</h3>
+                    <p class="text-text-secondary mb-6">Match cultural elements with their regions of origin and learn about diversity</p>
+                    <div class="flex items-center justify-center text-sm text-text-secondary mb-4">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>10-15 minutes</span>
+                    </div>
+                    <button class="btn-primary w-full">Play Now</button>
+                </div>
+                
+                <!-- Festival Simulator -->
+                <div class="card-cultural p-6 text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-3">Festival Simulator</h3>
+                    <p class="text-text-secondary mb-6">Plan and organize virtual festivals while learning about traditions and customs</p>
+                    <div class="flex items-center justify-center text-sm text-text-secondary mb-4">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>20-30 minutes</span>
+                    </div>
+                    <button class="btn-primary w-full">Play Now</button>
+                </div>
+                
+                <!-- Art & Craft Workshop -->
+                <div class="card-cultural p-6 text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-success to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/>
+                            <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-3">Virtual Art Workshop</h3>
+                    <p class="text-text-secondary mb-6">Create digital versions of traditional Indian art forms with guided tutorials</p>
+                    <div class="flex items-center justify-center text-sm text-text-secondary mb-4">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>25-40 minutes</span>
+                    </div>
+                    <button class="btn-primary w-full">Start Creating</button>
+                </div>
+                
+                <!-- Cultural Memory Game -->
+                <div class="card-cultural p-6 text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-warning to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-3">Memory Challenge</h3>
+                    <p class="text-text-secondary mb-6">Test your memory with cultural symbols, monuments, and traditional patterns</p>
+                    <div class="flex items-center justify-center text-sm text-text-secondary mb-4">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>5-10 minutes</span>
+                    </div>
+                    <button class="btn-primary w-full">Challenge Memory</button>
+                </div>
+                
+                <!-- Language Learning -->
+                <div class="card-cultural p-6 text-center group hover:scale-105 transition-transform duration-300">
+                    <div class="w-20 h-20 bg-gradient-to-br from-error to-warning rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-3">Sanskrit Basics</h3>
+                    <p class="text-text-secondary mb-6">Learn basic Sanskrit words and phrases used in cultural and spiritual contexts</p>
+                    <div class="flex items-center justify-center text-sm text-text-secondary mb-4">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>15-25 minutes</span>
+                    </div>
+                    <button class="btn-primary w-full">Learn Sanskrit</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Learning -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Learn Together</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Join study groups, participate in discussions, and share your cultural discoveries</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Study Groups -->
+                <div class="card-cultural p-8">
+                    <h3 class="text-2xl font-headlines font-semibold text-text-primary mb-6">Active Study Groups</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center p-4 bg-primary-50 rounded-lg">
+                            <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Study group" class="w-12 h-12 rounded-full mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div class="flex-1">
+                                <h4 class="font-headlines font-semibold text-text-primary">Classical Dance Appreciation</h4>
+                                <p class="text-sm text-text-secondary">24 members • Next session: Tomorrow 7 PM IST</p>
+                            </div>
+                            <button class="btn-primary text-sm px-4 py-2">Join</button>
+                        </div>
+                        
+                        <div class="flex items-center p-4 bg-secondary-50 rounded-lg">
+                            <img src="https://images.pixabay.com/photo/2016/11/29/13/14/attractive-1869761_1280.jpg" alt="Study group" class="w-12 h-12 rounded-full mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div class="flex-1">
+                                <h4 class="font-headlines font-semibold text-text-primary">Mughal History Deep Dive</h4>
+                                <p class="text-sm text-text-secondary">18 members • Next session: Friday 8 PM IST</p>
+                            </div>
+                            <button class="btn-secondary text-sm px-4 py-2">Join</button>
+                        </div>
+                        
+                        <div class="flex items-center p-4 bg-accent-50 rounded-lg">
+                            <img src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Study group" class="w-12 h-12 rounded-full mr-4" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div class="flex-1">
+                                <h4 class="font-headlines font-semibold text-text-primary">Regional Cuisine Exploration</h4>
+                                <p class="text-sm text-text-secondary">31 members • Next session: Sunday 6 PM IST</p>
+                            </div>
+                            <button class="btn-accent text-sm px-4 py-2">Join</button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-6">
+                        <button class="btn-primary">Create Study Group</button>
+                    </div>
+                </div>
+                
+                <!-- Discussion Forum -->
+                <div class="card-cultural p-8">
+                    <h3 class="text-2xl font-headlines font-semibold text-text-primary mb-6">Recent Discussions</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-primary pl-4">
+                            <h4 class="font-headlines font-semibold text-text-primary mb-1">The Evolution of Indian Classical Music</h4>
+                            <p class="text-sm text-text-secondary mb-2">Exploring how ragas have evolved over centuries and their regional variations...</p>
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <span>Started by Ravi Kumar</span>
+                                <span class="mx-2">•</span>
+                                <span>12 replies</span>
+                                <span class="mx-2">•</span>
+                                <span>2 hours ago</span>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-secondary pl-4">
+                            <h4 class="font-headlines font-semibold text-text-primary mb-1">Symbolism in Temple Architecture</h4>
+                            <p class="text-sm text-text-secondary mb-2">Understanding the deeper meanings behind architectural elements in South Indian temples...</p>
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <span>Started by Priya Sharma</span>
+                                <span class="mx-2">•</span>
+                                <span>8 replies</span>
+                                <span class="mx-2">•</span>
+                                <span>5 hours ago</span>
+                            </div>
+                        </div>
+                        
+                        <div class="border-l-4 border-accent pl-4">
+                            <h4 class="font-headlines font-semibold text-text-primary mb-1">Modern Adaptations of Traditional Festivals</h4>
+                            <p class="text-sm text-text-secondary mb-2">How are traditional festivals being celebrated in contemporary urban settings...</p>
+                            <div class="flex items-center text-xs text-text-secondary">
+                                <span>Started by Arjun Patel</span>
+                                <span class="mx-2">•</span>
+                                <span>15 replies</span>
+                                <span class="mx-2">•</span>
+                                <span>1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-6">
+                        <button class="btn-secondary">Join Discussion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-text-primary text-surface py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="md:col-span-1">
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                            <circle cx="50" cy="20" r="8"/>
+                            <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                            <rect x="45" y="60" width="10" height="25"/>
+                            <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-headlines font-semibold text-primary">Heritage India</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">Discover the soul of India through its living heritage, traditions, and cultural treasures.</p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.017 0C18.396 0 20.396 1.104 20.396 4.297v11.406C20.396 18.896 18.396 20 12.017 20H7.983C1.604 20-.396 18.896-.396 15.703V4.297C-.396 1.104 1.604 0 7.983 0h4.034zm-5.017 7v6h2v-6H7zm1-2a1 1 0 100-2 1 1 0 000 2zm3 2v6h2v-3.5c0-1.5 1-2.5 2.5-2.5s1.5 1 1.5 2.5V13h2v-4c0-2-1.5-3-3.5-3S11 7.5 11 7z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Explore</h3>
+                    <ul class="space-y-2">
+                        <li><a href="regional_explorer_interactive_cultural_map.html" class="text-gray-300 hover:text-primary transition-colors">Regional Culture</a></li>
+                        <li><a href="festival_calendar_living_cultural_timeline.html" class="text-gray-300 hover:text-primary transition-colors">Festival Calendar</a></li>
+                        <li><a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-gray-300 hover:text-primary transition-colors">Arts & Crafts</a></li>
+                        <li><a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-gray-300 hover:text-primary transition-colors">Culinary Heritage</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Community -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Community</h3>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Share Your Story</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Cultural Forum</a></li>
+                        <li><a href="interactive_learning_hub_cultural_education_center.html" class="text-gray-300 hover:text-primary transition-colors">Learning Hub</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Events</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Stay Connected</h3>
+                    <p class="text-sm text-gray-300 mb-4">Get cultural insights and festival updates delivered to your inbox.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="input-cultural flex-1 mr-2 text-text-primary" />
+                        <button class="btn-primary px-4 py-2">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-sm text-gray-300">© 2025 Heritage India. All Rights Reserved. Celebrating India's cultural legacy with respect and authenticity.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Quiz functionality
+        let currentQuestion = 1;
+        let score = 0;
+        let selectedAnswer = null;
+        
+        const questions = [
+            {
+                question: "Which festival is known as the 'Festival of Lights' and celebrates the victory of light over darkness?",
+                options: ["Diwali", "Holi", "Navratri", "Eid"],
+                correct: "diwali",
+                explanation: "Diwali, also known as Deepavali, is one of the most significant festivals in Hinduism. It symbolizes the spiritual victory of light over darkness, good over evil, and knowledge over ignorance. The festival is celebrated by lighting oil lamps, decorating homes, and sharing sweets with family and friends."
+            },
+            {
+                question: "Which classical dance form originated in Tamil Nadu and is known for its spiritual expressions?",
+                options: ["Kathak", "Bharatanatyam", "Odissi", "Kuchipudi"],
+                correct: "bharatanatyam",
+                explanation: "Bharatanatyam is one of the oldest classical dance forms of India, originating in Tamil Nadu. It is characterized by its fixed upper torso, bent legs, intricate footwork, and expressive hand gestures that tell stories from Hindu mythology."
+            },
+            {
+                question: "The Taj Mahal was built by which Mughal emperor as a mausoleum for his wife?",
+                options: ["Akbar", "Shah Jahan", "Aurangzeb", "Humayun"],
+                correct: "shah jahan",
+                explanation: "The Taj Mahal was commissioned by Mughal emperor Shah Jahan in 1632 to house the tomb of his favorite wife, Mumtaz Mahal. It is considered one of the finest examples of Mughal architecture and a UNESCO World Heritage Site."
+            },
+            {
+                question: "Which spice is known as 'liquid gold' and is extensively used in Indian cuisine?",
+                options: ["Cardamom", "Saffron", "Turmeric", "Cinnamon"],
+                correct: "saffron",
+                explanation: "Saffron, derived from the flower Crocus sativus, is one of the world's most expensive spices by weight. It's extensively used in Indian cuisine, particularly in dishes like biryani and various sweets, and is known for its distinctive flavor and golden color."
+            },
+            {
+                question: "The ancient practice of yoga originated in which civilization?",
+                options: ["Mauryan", "Gupta", "Indus Valley", "Vedic"],
+                correct: "vedic",
+                explanation: "Yoga has its origins in the Vedic civilization of ancient India, with the earliest mentions found in the Rig Veda. The practice combines physical postures, breathing techniques, and meditation to achieve spiritual and physical well-being."
+            }
+        ];
+        
+        // Quiz option selection
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove previous selections
+                document.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.querySelector('.w-3').style.opacity = '0';
+                });
+                
+                // Select current option
+                this.classList.add('selected');
+                this.querySelector('.w-3').style.opacity = '1';
+                selectedAnswer = this.dataset.answer;
+                
+                // Enable submit button
+                document.getElementById('quiz-submit').disabled = false;
+            });
+        });
+        
+        // Quiz submit functionality
+        document.getElementById('quiz-submit').addEventListener('click', function() {
+            if (!selectedAnswer) return;
+            
+            const currentQ = questions[currentQuestion - 1];
+            const isCorrect = selectedAnswer === currentQ.correct;
+            
+            // Show results
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                if (option.dataset.answer === currentQ.correct) {
+                    option.classList.add('correct');
+                } else if (option.dataset.answer === selectedAnswer && !isCorrect) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Update score
+            if (isCorrect) {
+                score += 20;
+                document.getElementById('quiz-score').textContent = score;
+            }
+            
+            // Show explanation
+            document.getElementById('quiz-explanation').classList.remove('hidden');
+            document.getElementById('quiz-explanation').querySelector('p').textContent = currentQ.explanation;
+            
+            // Hide submit, show next
+            this.classList.add('hidden');
+            if (currentQuestion < questions.length) {
+                document.getElementById('quiz-next').classList.remove('hidden');
+            } else {
+                // Quiz completed
+                setTimeout(() => {
+                    alert(`Quiz completed! Your final score: ${score}/100`);
+                }, 1000);
+            }
+        });
+        
+        // Quiz next question
+        document.getElementById('quiz-next').addEventListener('click', function() {
+            if (currentQuestion >= questions.length) return;
+            
+            currentQuestion++;
+            const nextQ = questions[currentQuestion - 1];
+            
+            // Update question
+            document.getElementById('question-number').textContent = currentQuestion;
+            document.getElementById('quiz-question').textContent = nextQ.question;
+            document.getElementById('quiz-progress').style.width = `${(currentQuestion / questions.length) * 100}%`;
+            
+            // Update options
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((option, index) => {
+                option.dataset.answer = nextQ.options[index].toLowerCase().replace(' ', '');
+                option.querySelector('span').textContent = nextQ.options[index];
+                option.classList.remove('selected', 'correct', 'incorrect');
+                option.querySelector('.w-3').style.opacity = '0';
+            });
+            
+            // Reset state
+            selectedAnswer = null;
+            document.getElementById('quiz-submit').disabled = true;
+            document.getElementById('quiz-submit').classList.remove('hidden');
+            document.getElementById('quiz-next').classList.add('hidden');
+            document.getElementById('quiz-explanation').classList.add('hidden');
+        });
+        
+        // Quiz hint functionality
+        document.getElementById('quiz-hint').addEventListener('click', function() {
+            const hints = [
+                "This festival involves lighting diyas (oil lamps) and is celebrated in autumn.",
+                "This dance form uses mudras (hand gestures) extensively and originated in South India.",
+                "This emperor's name means 'King of the World' in Persian.",
+                "This spice comes from a flower and is more valuable than gold by weight.",
+                "This practice is mentioned in ancient Sanskrit texts and combines physical and spiritual elements."
+            ];
+            
+            alert(`Hint: ${hints[currentQuestion - 1]}`);
+        });
+        
+        // Start learning button functionality
+        document.getElementById('start-learning-btn').addEventListener('click', function() {
+            document.querySelector('#quiz-container').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

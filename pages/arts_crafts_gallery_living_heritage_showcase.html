@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arts & Crafts Gallery - Heritage India</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <style>
+        .gallery-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.2);
+        }
+        .artisan-card {
+            background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(139, 69, 19, 0.1));
+        }
+        .technique-step {
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.5s ease;
+        }
+        .technique-step.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .filter-tag {
+            transition: all 0.3s ease;
+        }
+        .filter-tag.active {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .zoom-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        .craft-animation {
+            animation: gentle-float 4s ease-in-out infinite;
+        }
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .heritage-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fheritagei5090back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background text-text-primary">
+    <!-- Navigation Header -->
+    <nav class="bg-surface shadow-cultural sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <svg class="h-10 w-10 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                        <circle cx="50" cy="20" r="8"/>
+                        <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                        <rect x="45" y="60" width="10" height="25"/>
+                        <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                    </svg>
+                    <span class="ml-3 text-2xl font-headlines font-semibold text-primary">Heritage India</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="homepage_cultural_heritage_hub.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                        <a href="regional_explorer_interactive_cultural_map.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Regions</a>
+                        <a href="festival_calendar_living_cultural_timeline.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Festivals</a>
+                        <a href="arts_crafts_gallery_living_heritage_showcase.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Arts & Crafts</a>
+                        <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                        <a href="interactive_learning_hub_cultural_education_center.html" class="text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Learning Hub</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-text-secondary hover:text-primary p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-surface border-t border-accent-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="homepage_cultural_heritage_hub.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Home</a>
+                <a href="regional_explorer_interactive_cultural_map.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Regions</a>
+                <a href="festival_calendar_living_cultural_timeline.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Festivals</a>
+                <a href="arts_crafts_gallery_living_heritage_showcase.html" class="block text-primary font-medium px-3 py-2 rounded-md bg-primary-50">Arts & Crafts</a>
+                <a href="culinary_heritage_explorer_regional_flavor_journey.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Cuisine</a>
+                <a href="interactive_learning_hub_cultural_education_center.html" class="block text-text-secondary hover:text-primary transition-cultural px-3 py-2 rounded-md hover:bg-primary-50">Learning Hub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative py-20 heritage-pattern overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="craft-animation">
+                <h1 class="text-5xl md:text-7xl font-headlines font-bold text-primary mb-6">Living Heritage Showcase</h1>
+                <p class="text-xl md:text-2xl font-body text-text-secondary max-w-4xl mx-auto mb-8">Discover the masterful artistry and timeless traditions that have shaped India's cultural identity for millennia</p>
+            </div>
+            
+            <!-- Featured Craft Highlight -->
+            <div class="mt-12 max-w-4xl mx-auto">
+                <div class="card-cultural p-8 text-left">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h2 class="text-3xl font-headlines font-semibold text-text-primary mb-4">Craft of the Month</h2>
+                            <h3 class="text-2xl font-headlines text-primary mb-4">Madhubani Painting</h3>
+                            <p class="text-text-secondary mb-6">Originating from the Mithila region of Bihar, these vibrant paintings tell stories of love, devotion, and nature through intricate geometric patterns and bold colors.</p>
+                            <div class="flex items-center space-x-4">
+                                <button class="btn-primary">Watch Technique</button>
+                                <button class="btn-secondary">Meet Artisan</button>
+                            </div>
+                        </div>
+                        <div class="relative overflow-hidden rounded-lg">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop" alt="Madhubani painting demonstration" class="w-full h-64 object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                            <div class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                                Bihar Heritage
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Navigation -->
+    <section class="py-8 bg-surface sticky top-16 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap justify-center gap-4">
+                <button class="filter-tag active px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="all">
+                    All Crafts
+                </button>
+                <button class="filter-tag px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="textiles">
+                    Textiles
+                </button>
+                <button class="filter-tag px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="paintings">
+                    Paintings
+                </button>
+                <button class="filter-tag px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="ceramics">
+                    Ceramics
+                </button>
+                <button class="filter-tag px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="metalwork">
+                    Metalwork
+                </button>
+                <button class="filter-tag px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="woodwork">
+                    Woodwork
+                </button>
+                <button class="filter-tag px-6 py-2 rounded-full bg-accent-100 text-text-primary font-medium hover:bg-primary hover:text-white transition-cultural" data-filter="endangered">
+                    Endangered Arts
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Gallery Grid -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="gallery-grid">
+                
+                <!-- Pashmina Weaving -->
+                <div class="gallery-item card-cultural overflow-hidden" data-category="textiles">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/6249509/pexels-photo-6249509.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Pashmina weaving process" class="w-full h-64 object-cover cursor-pointer zoom-trigger" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-secondary text-white px-2 py-1 rounded text-xs font-medium">
+                            Kashmir
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Pashmina Weaving</h3>
+                        <p class="text-text-secondary text-sm mb-4">The ancient art of weaving the finest cashmere from Changthangi goats, creating luxurious shawls prized worldwide.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs text-text-secondary bg-accent-100 px-2 py-1 rounded">Heritage Craft</span>
+                            <span class="text-xs text-text-secondary">Kashmir Valley</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary text-sm px-4 py-2">Watch Process</button>
+                            <button class="btn-secondary text-sm px-4 py-2">Meet Artisan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blue Pottery -->
+                <div class="gallery-item card-cultural overflow-hidden" data-category="ceramics">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2017/09/07/08/54/money-2724241_1280.jpg" alt="Blue pottery crafting" class="w-full h-64 object-cover cursor-pointer zoom-trigger" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-primary text-white px-2 py-1 rounded text-xs font-medium">
+                            Rajasthan
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Blue Pottery</h3>
+                        <p class="text-text-secondary text-sm mb-4">Jaipur's distinctive ceramic art featuring cobalt blue dyes and intricate floral patterns on white backgrounds.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs text-text-secondary bg-accent-100 px-2 py-1 rounded">Traditional Craft</span>
+                            <span class="text-xs text-text-secondary">Jaipur</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary text-sm px-4 py-2">Learn Technique</button>
+                            <button class="btn-secondary text-sm px-4 py-2">Shop Authentic</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warli Painting -->
+                <div class="gallery-item card-cultural overflow-hidden" data-category="paintings">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop" alt="Warli painting creation" class="w-full h-64 object-cover cursor-pointer zoom-trigger" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-accent text-white px-2 py-1 rounded text-xs font-medium">
+                            Maharashtra
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Warli Painting</h3>
+                        <p class="text-text-secondary text-sm mb-4">Ancient tribal art using simple geometric shapes to depict daily life, nature, and spiritual beliefs of the Warli people.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs text-text-secondary bg-accent-100 px-2 py-1 rounded">Tribal Art</span>
+                            <span class="text-xs text-text-secondary">Thane District</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary text-sm px-4 py-2">Explore Symbols</button>
+                            <button class="btn-secondary text-sm px-4 py-2">Cultural Story</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bidriware -->
+                <div class="gallery-item card-cultural overflow-hidden" data-category="metalwork">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Bidriware metalwork" class="w-full h-64 object-cover cursor-pointer zoom-trigger" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-secondary text-white px-2 py-1 rounded text-xs font-medium">
+                            Karnataka
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Bidriware</h3>
+                        <p class="text-text-secondary text-sm mb-4">Exquisite metalwork from Bidar featuring intricate silver and gold inlay work on blackened zinc and copper alloy.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs text-text-secondary bg-accent-100 px-2 py-1 rounded">Metal Craft</span>
+                            <span class="text-xs text-text-secondary">Bidar</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary text-sm px-4 py-2">Inlay Process</button>
+                            <button class="btn-secondary text-sm px-4 py-2">Master Artisan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Channapatna Toys -->
+                <div class="gallery-item card-cultural overflow-hidden" data-category="woodwork">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2016/11/29/13/14/attractive-1869761_1280.jpg" alt="Channapatna wooden toys" class="w-full h-64 object-cover cursor-pointer zoom-trigger" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-primary text-white px-2 py-1 rounded text-xs font-medium">
+                            Karnataka
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Channapatna Toys</h3>
+                        <p class="text-text-secondary text-sm mb-4">Colorful wooden toys and dolls crafted using traditional lacquer work techniques, known for their smooth finish and vibrant colors.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs text-text-secondary bg-accent-100 px-2 py-1 rounded">Wood Craft</span>
+                            <span class="text-xs text-text-secondary">Channapatna</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary text-sm px-4 py-2">Lacquer Art</button>
+                            <button class="btn-secondary text-sm px-4 py-2">Toy Making</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pattachitra -->
+                <div class="gallery-item card-cultural overflow-hidden" data-category="paintings endangered">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Pattachitra painting" class="w-full h-64 object-cover cursor-pointer zoom-trigger" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-4 left-4 bg-error text-white px-2 py-1 rounded text-xs font-medium">
+                            Endangered
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zM13 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zM13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Pattachitra</h3>
+                        <p class="text-text-secondary text-sm mb-4">Ancient scroll paintings from Odisha depicting mythological narratives with natural pigments on cloth or palm leaves.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs text-white bg-error px-2 py-1 rounded">Needs Support</span>
+                            <span class="text-xs text-text-secondary">Odisha</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn-primary text-sm px-4 py-2">Support Craft</button>
+                            <button class="btn-secondary text-sm px-4 py-2">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Artisan Profiles -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Master Artisans</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Meet the guardians of tradition who keep India's artistic heritage alive through their dedication and skill</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Artisan 1 -->
+                <div class="artisan-card card-cultural p-6 text-center">
+                    <div class="relative mb-6">
+                        <img src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Master weaver Kamala Devi" class="w-24 h-24 rounded-full mx-auto object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-primary text-white px-3 py-1 rounded-full text-xs">
+                            Master Weaver
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Kamala Devi</h3>
+                    <p class="text-text-secondary text-sm mb-4">40 years of preserving Pashmina weaving traditions in Kashmir. Her intricate patterns tell stories of mountain life and spiritual devotion.</p>
+                    <div class="flex justify-center space-x-2 mb-4">
+                        <span class="text-xs bg-accent-100 text-text-secondary px-2 py-1 rounded">Pashmina</span>
+                        <span class="text-xs bg-accent-100 text-text-secondary px-2 py-1 rounded">Kashmir</span>
+                    </div>
+                    <button class="btn-primary text-sm px-4 py-2">Watch Interview</button>
+                </div>
+                
+                <!-- Artisan 2 -->
+                <div class="artisan-card card-cultural p-6 text-center">
+                    <div class="relative mb-6">
+                        <img src="https://images.pixabay.com/photo/2017/08/06/12/52/classical-dance-2592655_1280.jpg" alt="Potter Ravi Kumar" class="w-24 h-24 rounded-full mx-auto object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-secondary text-white px-3 py-1 rounded-full text-xs">
+                            Master Potter
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Ravi Kumar</h3>
+                    <p class="text-text-secondary text-sm mb-4">Third-generation blue pottery artisan from Jaipur, innovating traditional techniques while preserving authentic methods.</p>
+                    <div class="flex justify-center space-x-2 mb-4">
+                        <span class="text-xs bg-accent-100 text-text-secondary px-2 py-1 rounded">Blue Pottery</span>
+                        <span class="text-xs bg-accent-100 text-text-secondary px-2 py-1 rounded">Rajasthan</span>
+                    </div>
+                    <button class="btn-primary text-sm px-4 py-2">Studio Visit</button>
+                </div>
+                
+                <!-- Artisan 3 -->
+                <div class="artisan-card card-cultural p-6 text-center">
+                    <div class="relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop" alt="Painter Meera Joshi" class="w-24 h-24 rounded-full mx-auto object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-accent text-white px-3 py-1 rounded-full text-xs">
+                            Master Painter
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-headlines font-semibold text-text-primary mb-2">Meera Joshi</h3>
+                    <p class="text-text-secondary text-sm mb-4">Renowned Madhubani artist teaching young women to continue this sacred tradition while supporting their economic independence.</p>
+                    <div class="flex justify-center space-x-2 mb-4">
+                        <span class="text-xs bg-accent-100 text-text-secondary px-2 py-1 rounded">Madhubani</span>
+                        <span class="text-xs bg-accent-100 text-text-secondary px-2 py-1 rounded">Bihar</span>
+                    </div>
+                    <button class="btn-primary text-sm px-4 py-2">Art Workshop</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Technique Breakdown -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Craft Techniques Unveiled</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Discover the intricate processes behind India's most celebrated crafts</p>
+            </div>
+            
+            <div class="card-cultural p-8">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-headlines font-semibold text-text-primary mb-6">Madhubani Painting Process</h3>
+                        <div class="space-y-4" id="technique-steps">
+                            <div class="technique-step active flex items-start space-x-4 p-4 bg-accent-50 rounded-lg">
+                                <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
+                                <div>
+                                    <h4 class="font-headlines font-semibold text-text-primary mb-2">Canvas Preparation</h4>
+                                    <p class="text-text-secondary text-sm">Handmade paper or cloth is prepared with a coating of cow dung and mud for the perfect texture.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="technique-step flex items-start space-x-4 p-4 bg-accent-50 rounded-lg">
+                                <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
+                                <div>
+                                    <h4 class="font-headlines font-semibold text-text-primary mb-2">Natural Pigments</h4>
+                                    <p class="text-text-secondary text-sm">Colors are extracted from turmeric, indigo, ochre, and other natural sources mixed with tree gum.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="technique-step flex items-start space-x-4 p-4 bg-accent-50 rounded-lg">
+                                <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
+                                <div>
+                                    <h4 class="font-headlines font-semibold text-text-primary mb-2">Sacred Geometry</h4>
+                                    <p class="text-text-secondary text-sm">Traditional motifs and patterns are drawn using bamboo sticks and fingers, following ancient geometric principles.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="technique-step flex items-start space-x-4 p-4 bg-accent-50 rounded-lg">
+                                <div class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">4</div>
+                                <div>
+                                    <h4 class="font-headlines font-semibold text-text-primary mb-2">Storytelling Through Art</h4>
+                                    <p class="text-text-secondary text-sm">Each painting narrates mythological stories, celebrating festivals, or depicting daily life with symbolic meaning.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 flex space-x-4">
+                            <button class="btn-primary" id="prev-step">Previous Step</button>
+                            <button class="btn-secondary" id="next-step">Next Step</button>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop" alt="Madhubani painting process" class="w-full h-96 object-cover rounded-lg" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity rounded-lg">
+                            <button class="bg-white bg-opacity-90 rounded-full p-4 hover:bg-opacity-100 transition-all">
+                                <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conservation Efforts -->
+    <section class="py-16 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Preserving Our Heritage</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Supporting artisans and endangered crafts for future generations</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Conservation Initiative 1 -->
+                <div class="card-cultural p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-error rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-headlines font-semibold text-text-primary">Endangered Crafts Initiative</h3>
+                            <p class="text-text-secondary text-sm">Supporting 15 at-risk traditional arts</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary mb-6">Our conservation program provides direct support to artisans practicing endangered crafts, ensuring these precious traditions survive for future generations.</p>
+                    <div class="mb-6">
+                        <div class="flex justify-between text-sm text-text-secondary mb-2">
+                            <span>Progress: 8 of 15 crafts supported</span>
+                            <span>53%</span>
+                        </div>
+                        <div class="w-full bg-accent-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: 53%"></div>
+                        </div>
+                    </div>
+                    <button class="btn-primary w-full">Support This Initiative</button>
+                </div>
+                
+                <!-- Conservation Initiative 2 -->
+                <div class="card-cultural p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-success rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-headlines font-semibold text-text-primary">Artisan Education Program</h3>
+                            <p class="text-text-secondary text-sm">Training 200+ young artisans</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary mb-6">Connecting master artisans with young apprentices to ensure traditional knowledge and techniques are passed down through generations.</p>
+                    <div class="mb-6">
+                        <div class="flex justify-between text-sm text-text-secondary mb-2">
+                            <span>Students trained: 156 of 200</span>
+                            <span>78%</span>
+                        </div>
+                        <div class="w-full bg-accent-200 rounded-full h-2">
+                            <div class="bg-success h-2 rounded-full" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <button class="btn-secondary w-full">Join as Mentor</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentic Marketplace -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-headlines font-bold text-primary mb-4">Authentic Artisan Marketplace</h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">Support traditional craftspeople by purchasing authentic handmade treasures</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/6249509/pexels-photo-6249509.jpeg?auto=compress&cs=tinysrgb&w=1260" alt="Handwoven Pashmina shawl" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-2 right-2 bg-success text-white px-2 py-1 rounded text-xs">
+                            Authentic
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-headlines font-semibold text-text-primary mb-2">Kashmiri Pashmina Shawl</h3>
+                        <p class="text-text-secondary text-sm mb-3">Hand-woven by Kamala Devi</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-bold text-primary">₹15,000</span>
+                            <button class="btn-primary text-sm px-3 py-1">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2017/09/07/08/54/money-2724241_1280.jpg" alt="Blue pottery vase" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-2 right-2 bg-success text-white px-2 py-1 rounded text-xs">
+                            Authentic
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-headlines font-semibold text-text-primary mb-2">Blue Pottery Vase</h3>
+                        <p class="text-text-secondary text-sm mb-3">Crafted by Ravi Kumar</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-bold text-primary">₹3,500</span>
+                            <button class="btn-primary text-sm px-3 py-1">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop" alt="Madhubani painting" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-2 right-2 bg-success text-white px-2 py-1 rounded text-xs">
+                            Authentic
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-headlines font-semibold text-text-primary mb-2">Madhubani Painting</h3>
+                        <p class="text-text-secondary text-sm mb-3">Original by Meera Joshi</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-bold text-primary">₹8,000</span>
+                            <button class="btn-primary text-sm px-3 py-1">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="card-cultural overflow-hidden group">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2016/11/29/13/14/attractive-1869761_1280.jpg" alt="Channapatna wooden toys" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-2 right-2 bg-success text-white px-2 py-1 rounded text-xs">
+                            Authentic
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-headlines font-semibold text-text-primary mb-2">Wooden Toy Set</h3>
+                        <p class="text-text-secondary text-sm mb-3">Channapatna craft</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-bold text-primary">₹1,200</span>
+                            <button class="btn-primary text-sm px-3 py-1">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-accent">Explore Full Marketplace</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zoom Overlay -->
+    <div class="zoom-overlay" id="zoom-overlay">
+        <img class="zoom-image" id="zoom-image" src alt="Zoomed craft image" />
+        <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300" id="close-zoom">&times;</button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-text-primary text-surface py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="md:col-span-1">
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 100 100" fill="currentColor">
+                            <circle cx="50" cy="20" r="8"/>
+                            <path d="M30 35 L50 25 L70 35 L65 60 L35 60 Z"/>
+                            <rect x="45" y="60" width="10" height="25"/>
+                            <ellipse cx="50" cy="90" rx="15" ry="5"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-headlines font-semibold text-primary">Heritage India</span>
+                    </div>
+                    <p class="text-sm text-gray-300 mb-4">Celebrating India's living heritage through authentic crafts and cultural storytelling.</p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.017 0C18.396 0 20.396 1.104 20.396 4.297v11.406C20.396 18.896 18.396 20 12.017 20H7.983C1.604 20-.396 18.896-.396 15.703V4.297C-.396 1.104 1.604 0 7.983 0h4.034zm-5.017 7v6h2v-6H7zm1-2a1 1 0 100-2 1 1 0 000 2zm3 2v6h2v-3.5c0-1.5 1-2.5 2.5-2.5s1.5 1 1.5 2.5V13h2v-4c0-2-1.5-3-3.5-3S11 7.5 11 7z" clip-rule="evenodd"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Explore Crafts</h3>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Textiles & Weaving</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Traditional Paintings</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Pottery & Ceramics</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Metalwork & Jewelry</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Artisan Support -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Support Artisans</h3>
+                    <ul class="space-y-2">
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Authentic Marketplace</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Conservation Fund</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Artisan Profiles</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-primary transition-colors">Apprenticeship Program</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div>
+                    <h3 class="text-lg font-headlines font-semibold text-primary mb-4">Stay Connected</h3>
+                    <p class="text-sm text-gray-300 mb-4">Get updates on new artisan features and craft discoveries.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="input-cultural flex-1 mr-2 text-text-primary" />
+                        <button class="btn-primary px-4 py-2">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-sm text-gray-300">© 2025 Heritage India. All Rights Reserved. Preserving traditions, supporting artisans, celebrating culture.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Filter functionality
+        const filterTags = document.querySelectorAll('.filter-tag');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                // Remove active class from all tags
+                filterTags.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tag
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                
+                galleryItems.forEach(item => {
+                    if (filter === 'all') {
+                        item.style.display = 'block';
+                    } else {
+                        const categories = item.dataset.category.split(' ');
+                        if (categories.includes(filter)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+
+        // Zoom functionality
+        const zoomTriggers = document.querySelectorAll('.zoom-trigger');
+        const zoomOverlay = document.getElementById('zoom-overlay');
+        const zoomImage = document.getElementById('zoom-image');
+        const closeZoom = document.getElementById('close-zoom');
+
+        zoomTriggers.forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                zoomImage.src = this.src;
+                zoomOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeZoom.addEventListener('click', function() {
+            zoomOverlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        zoomOverlay.addEventListener('click', function(e) {
+            if (e.target === zoomOverlay) {
+                zoomOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Technique steps navigation
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.technique-step');
+        const prevBtn = document.getElementById('prev-step');
+        const nextBtn = document.getElementById('next-step');
+
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                if (index === stepIndex) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            
+            prevBtn.disabled = stepIndex === 0;
+            nextBtn.disabled = stepIndex === steps.length - 1;
+        }
+
+        prevBtn.addEventListener('click', function() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        nextBtn.addEventListener('click', function() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        // Auto-advance technique steps
+        setInterval(() => {
+            currentStep = (currentStep + 1) % steps.length;
+            showStep(currentStep);
+        }, 4000);
+
+        // Initialize first step
+        showStep(0);
+    </script>
+</body>
+</html>
